@@ -31,7 +31,7 @@ L.control.scale({
 }).addTo(map);
 
 // Wettervorhersage MET Norway
-async function showForecast(url, latlng) {
+async function showForecast (url, latlng) {
     let response = await fetch(url);
     let jsondata = await response.json();
    
@@ -76,3 +76,27 @@ map.on("click", function (evt){
 map.fireEvent("click", {
     latlng: L.latLng(ibk.lat, ibk.lng)
 })
+
+// Wind daten laden
+async function loadWind(url) {
+    let response = await fetch (url);
+    let jsondata = await response.json ();
+    //console.log(jsondata);
+
+   L.velocityLayer({
+        displayValues: true,
+        lineWidth: 2, // dicke der Pfeile
+        displayOptions: {
+          velocityType: "",
+          position: "bottomright",
+          emptyString: "Keine Daten vorhanden",
+          speedUnit: "k/h",
+          directionString: "Windrichtung",
+          speedString: "Windgeschwindigkeit",
+        },
+        data: jsondata, // see demo/*.json, or wind-js-server for example data service
+      
+        }).addTo(map);
+}
+
+loadWind("https://geographie.uibk.ac.at/data/ecmwf/data/wind-10u-10v-europe.json");
