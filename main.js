@@ -54,10 +54,15 @@ async function showForecast(url, latlng) {
 
     for (let i=0; i<=24; i+= 3){
         console.log(timeseries[i]);
-        
+        let icon = timeseries[i].data.next_1_hours.summary.symbol_code;
+        let image = `icons/${icon}.svg`;
+        markup += `<img src="${image}" style = "width:32px;" title = "${timeseries[i].time.toLocaleString()}"></img>`
+        console.log(icon, image);        
+    
     }
     L.popup().setLatLng(latlng).setContent(markup).openOn(map);
 
+    //markup erweitern mit +=
 }
 //tr = Spalten Zeile; Td = spalte
 // Auf Kartenklick reagieren
@@ -67,5 +72,7 @@ map.on("click", function (evt){
         showForecast(url, evt.latlng);
     });
 
-
-
+// klick auf Innsbruck simulieren
+map.fireEvent("click", {
+    latlng: L.latLng(ibk.lat, ibk.lng)
+})
