@@ -40,7 +40,8 @@ async function showForecast(url, latlng) {
 // Auf Kartenklick reagieren
 map.on("click", function (evt){
     console.log(evt.latlng);
-        console.log (`https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${evt.latlng.lat}&lon=${evt.latlng.lng}`);
+        let url = (`https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${evt.latlng.lat}&lon=${evt.latlng.lng}`);
+        showForecast(url, evt.latlng);
     });
 
 
