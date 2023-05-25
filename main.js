@@ -34,16 +34,35 @@ L.control.scale({
 async function showForecast(url, latlng) {
     let response = await fetch(url);
     let jsondata = await response.json();
-    console.log(jsondata, latlng);
-
+   
     let current = jsondata.properties.timeseries[0].data.instant.details;
-    console.log(current);
+    //console.log(current);
+    let timestamp= new Date(jsondata.properties.meta.updated_at).toLocaleString();
+    let timeseries = jsondata.properties.timeseries;
+        let markup = `
+    <h4> Aktuelles Wetter für ${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)} ( ${timestamp})</h4>
+    <table>
+        <tr><td> Luftdruck (hPa)</td><td>${current.air_pressure_at_sea_level}</td></tr>
+        <tr><td> Lufttemperatur in °C </td><td>${current.air_temperature}</td></tr>
+        <tr><td> Bewölkungsgrad in % </td><td>${current.cloud_area_fraction}</td></tr>
+        <tr><td> Relative Feuchte in %</td><td>${current.relative_humidity}</td></tr>
+        <tr><td> Windrichtung in Grad</td><td>${current.relative_humidity}</td></tr>
+        <tr><td> Windgeschwindigkeit in m/s</td><td>${current.wind_speed}</td></tr>
+    </table>
+   
+    `;
+
+    for (let i=0; i<=24; i+= 3){
+        console.log(timeseries[i]);
+        
+    }
+    L.popup().setLatLng(latlng).setContent(markup).openOn(map);
 
 }
-
+//tr = Spalten Zeile; Td = spalte
 // Auf Kartenklick reagieren
 map.on("click", function (evt){
-    console.log(evt.latlng);
+    //console.log(evt.latlng);
         let url = (`https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=${evt.latlng.lat}&lon=${evt.latlng.lng}`);
         showForecast(url, evt.latlng);
     });
